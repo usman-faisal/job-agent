@@ -6,9 +6,9 @@ from src.core.llm.utils import LLMUtils, LLMEnums
 
 
 class Gemini:
-    def __init__(self, temperature: int = 0, max_tokens: int = None, timeout: int = None, max_retries: int = 2, tools: List[dict] = []):
+    def __init__(self, api_key, temperature: int = 0, max_tokens: int = None, timeout: int = None, max_retries: int = 2, tools: List[dict] = []):
         self.llm = ChatGoogleGenerativeAI(
-
+            api_key=api_key,
             model=LLMEnums.GEMINI.value,
             temperature=temperature,
             max_tokens=max_tokens,

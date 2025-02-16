@@ -1,14 +1,17 @@
-import os
+from src.config import settings
 from src.core.llm.implementations.gemini import Gemini
 from src.core.llm.utils import LLMEnums
-from .tool_definitions import tools
+from src.core.tools.tool_definitions import tools
 
 class LLM:
     def __init__(self):
-        llm_model = os.getenv("LLM_MODEL", LLMEnums.GEMINI.value)
+        llm_api_key = settings.LLM_API_KEY
+        llm_model = settings.LLM_MODEL
         if llm_model == LLMEnums.GEMINI.value:
-            self.llm = Gemini(tools=tools)
+            self.llm = Gemini(api_key=llm_api_key, tools=tools)
 
     async def get_completion(self, message: str, history: list):
         response = await self.llm.get_completion(message, history)
         return response
+
+llm = LLM()

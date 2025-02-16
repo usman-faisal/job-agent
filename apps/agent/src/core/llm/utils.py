@@ -4,7 +4,7 @@ from typing import List
 from enum import Enum
 
 class LLMEnums(Enum):
-    GEMINI = "gemini-1.5-pro"
+    GEMINI = "gemini-1.5-flash"
 
 class LLMUtils:
     @staticmethod

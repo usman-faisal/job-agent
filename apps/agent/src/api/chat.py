@@ -1,19 +1,23 @@
 from fastapi import APIRouter
-from src.core.chat.chat import Chat
-from typing import Any
+from pydantic import BaseModel
+
+from src.core.chat.chat_service import ChatService
 
 from src.core.chat.utils import ChatUtils
 
 router = APIRouter(tags=["chat"])
-chat = Chat()
+chat_service = ChatService()
 
 @router.get("/chat/get-messages")
 async def get_chat():
-    return await chat.get_chat()
+    return await chat_service.get_chat()
+
+class SendMessageDto(BaseModel):
+    message: str
 
 @router.post("/chat/send-message")
-async def post_chat(message: str) -> str:
-    response = await chat.chat(message)  # Ensure the coroutine is awaited
+async def post_chat(send_message_dto: SendMessageDto) -> str:
+    response = await chat_service.chat(send_message_dto.message)  # Ensure the coroutine is awaited
     print(response, 'response in controller')
     return response  # Return the actual response
 

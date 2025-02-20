@@ -11,7 +11,7 @@ import { Experience as ExperienceType } from "@/lib/types";
 const Experience = () => {
   const experience = useResumeStore((state) => state.experiences);
   const deleteExperience = useResumeStore((state) => state.deleteExperience);
-  const setExperience = useResumeStore((state) => state.setExperiences);
+  const setExperience = useResumeStore((state) => state.setExperience);
   const updateExperience = useResumeStore((state) => state.updateExperience);
   const [isExperienceFormOpen, setIsExperienceFormOpen] = useState(false);
   const [selectedExperience, setSelectedExperience] = useState<string | null>(
@@ -24,12 +24,12 @@ const Experience = () => {
     role: "",
     description: "",
     location: "",
-    expId: "",
-    resumeIdentifier: "",
+    id: "",
+    resumeId: "",
   };
 
   if (selectedExperience) {
-    defaultVal = experience.find((exp) => exp.expId === selectedExperience)!;
+    defaultVal = experience.find((exp) => exp.id === selectedExperience)!;
   }
 
   return (
@@ -41,7 +41,7 @@ const Experience = () => {
           {experience.map((exp) => (
             <SectionCard
               key={exp.startDate!}
-              id={exp.expId}
+              id={exp.id}
               onDelete={deleteExperience}
               primaryHeading={exp.role}
               secondaryHeading={exp.company}

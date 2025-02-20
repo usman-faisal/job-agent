@@ -8,14 +8,16 @@ import Project from "./project";
 
 const ResumeTemplate1 = () => {
   return (
-    <div className="w-[210mm] h-[297mm] mx-auto text-black bg-white p-8 shadow-lg print:shadow-none">
-      <Header />
-      <Summary />
-      <Skill />
-      <Project />
-      <Experience />
-      <Education />
-    </div>
+    <>
+    <Header />
+    <Summary />
+    <Skill />
+    <Project />
+    <Experience />
+    <Education />
+    
+    </>
+
   );
 };
 

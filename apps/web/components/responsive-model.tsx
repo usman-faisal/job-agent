@@ -89,7 +89,6 @@ const ModelContent = ({ className, children, ...props }: ModelProps) => {
   const ModelContent = isDesktop ? 
   DialogContentWithTitle 
   : DrawerContent;
-  console.log(ModelContent, 'slkdfjklsd')
   return (
     <ModelContent {...props} className={className}>
       {children}

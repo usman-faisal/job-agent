@@ -34,12 +34,18 @@ export type ResumeStore = Resume & {
     profileFieldName: string,
     profileFieldValue: string | number
   ) => void;
-  setExperiences: (experience: Experience) => void;
-  setEducations: (education: Education) => void;
-  setSkills: (skill: Skill) => void;
-  setProjects: (project: Project) => void;
-  setLanguages: (language: Language) => void;
-  setCertifications: (certification: Certification) => void;
+  setExperience: (experience: Experience) => void;
+  setExperiences: (experiences: Experience[]) => void;
+  setEducation: (education: Education) => void;
+  setEducations: (educations: Education[]) => void;
+  setSkill: (skill: Skill) => void;
+  setSkills: (skills: Skill[]) => void;
+  setProject: (project: Project) => void;
+  setProjects: (projects: Project[]) => void;
+  setLanguage: (language: Language) => void;
+  setLanguages: (languages: Language[]) => void;
+  setCertification: (certification: Certification) => void;
+  setCertifications: (certifications: Certification[]) => void;
   // setPublications: (publication: Publication) => void;
   setResumeId: (resumeId: string) => void;
   //

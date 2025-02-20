@@ -66,11 +66,11 @@ const LanguageForm = ({
 
   function onSubmit(data: Language) {
     if (selectedLanguage) {
-      onEdit(data.languageId, {
+      onEdit(data.id, {
         ...data,
       });
     } else {
-      onCreate({ ...data, languageId: uuidv4(), resumeIdentifier: pathName });
+      onCreate({ ...data, id: uuidv4(), resumeId: pathName });
     }
     setIsOpened(false);
   }

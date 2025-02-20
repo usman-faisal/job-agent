@@ -7,30 +7,49 @@ import SectionCard from "@/components/section-card";
 import { useState } from "react";
 import FormTrigger from "@/components/education/formTrigger";
 import { Education as EducationType } from "@/lib/types";
+import { useDeleteSectionItem } from "@/lib/api/resume";
+import { usePathname } from "next/navigation";
+import { getIdFromUrl } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const Education = () => {
+  let pathName = usePathname();
+  pathName = getIdFromUrl(pathName);
   const education = useResumeStore((state) => state.educations);
-  const deleteEducation = useResumeStore((state) => state.deleteEducation);
-  const setEducation = useResumeStore((state) => state.setEducations);
+  const deleteEducationStore = useResumeStore((state) => state.deleteEducation);
+  const setEducation = useResumeStore((state) => state.setEducation);
   const updateEducation = useResumeStore((state) => state.updateEducation);
   const [isEducationFormOpen, setIsEducationFormOpen] = useState(false);
   const [selectedEducation, setSelectedEducation] = useState<string | null>(
     null
   );
-  let defaultVal: EducationType = {
+  const { mutateAsync: deleteEducation } = useDeleteSectionItem('education', {
+    onSuccess: () => {
+      toast.success("Education deleted successfully");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error("Failed to delete education");
+    }
+  });
+  let defaultVal: Omit<EducationType, 'id' | 'resumeId'> = {
     degree: "",
     fieldOfStudy: "",
     startDate: "",
     endDate: "",
     score: 0,
-    eduId: "",
-    institutionName: "",
+    institution: "",
     description: "",
-    resumeIdentifier: "",
   };
 
   if (selectedEducation) {
-    defaultVal = education.find((edu) => edu.eduId === selectedEducation)!;
+    defaultVal = education.find((edu) => edu.id === selectedEducation)!;
+  }
+
+  async function handleDelete(educationId: string) {
+    await deleteEducation({ itemId: educationId, resumeId: pathName });
+    deleteEducationStore(educationId);
   }
 
   return (
@@ -40,12 +59,12 @@ const Education = () => {
       {education.length > 0 && (
         <div className="space-y-3">
           {education.map((edu) => (
-            <div draggable={true} key={edu.eduId}>
+            <div draggable={true} key={edu.id}>
               <SectionCard
-                id={edu.eduId}
-                onDelete={deleteEducation}
+                id={edu.id}
+                onDelete={(educationId) => handleDelete(educationId)}
                 primaryHeading={`${edu.degree} ${edu.fieldOfStudy}`}
-                secondaryHeading={edu.institutionName}
+                secondaryHeading={edu.institution}
                 setIsEducationFormOpen={setIsEducationFormOpen}
                 setSelectedEducation={setSelectedEducation}
               />

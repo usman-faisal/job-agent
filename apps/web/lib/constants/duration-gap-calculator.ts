@@ -44,27 +44,35 @@ export function calculateDuration(
     }
   }
   export function formatDate(dateString: string): string {
-    if (!dateString) return dateString;
-    if (dateString === "Present") return dateString;
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-  
-    const [day, month, year] = dateString.split("/").map(Number);
-  
-    const formattedMonth = months[month - 1];
-    const formattedYear = year;
-  
-    return `${formattedMonth} ${formattedYear}`;
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+    }).format(date);
   }
+  
+  // export function formatDate(dateString: string): string {
+  //   if (!dateString) return dateString;
+  //   if (dateString === "Present") return dateString;
+  //   const months = [
+  //     "Jan",
+  //     "Feb",
+  //     "Mar",
+  //     "Apr",
+  //     "May",
+  //     "Jun",
+  //     "Jul",
+  //     "Aug",
+  //     "Sep",
+  //     "Oct",
+  //     "Nov",
+  //     "Dec",
+  //   ];
+  
+  //   const [day, month, year] = dateString.split("/").map(Number);
+  
+  //   const formattedMonth = months[month - 1];
+  //   const formattedYear = year;
+  
+  //   return `${formattedMonth} ${formattedYear}`;
+  // }

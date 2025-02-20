@@ -27,10 +27,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Dispatch, SetStateAction, useEffect, useMemo } from "react";
-import { ScrollArea } from "../ui/scroll-area";
 import { usePathname } from "next/navigation";
 import { getIdFromUrl } from "@/lib/utils";
-
+import { useDeleteSectionItem, useSectionMutation } from "@/lib/api/resume";
+import { toast } from "sonner";
 type EducationFormProps = {
   isOpened: boolean;
   setIsOpened: Dispatch<SetStateAction<boolean>>;
@@ -38,7 +38,7 @@ type EducationFormProps = {
   onEdit: (id: string, data: Education) => void;
   selectedEducation: string | null;
   mode: "create" | "edit";
-  defaultVal: Education | undefined;
+  defaultVal: Omit<Education, 'id' | 'resumeId'> | undefined;
 };
 
 const EducationForm = ({
@@ -52,24 +52,45 @@ const EducationForm = ({
 }: EducationFormProps) => {
   let pathName = usePathname();
   pathName = getIdFromUrl(pathName);
-  const form = useForm<Education>({
-    resolver: zodResolver(EducationSchema),
+  const form = useForm<Omit<Education, 'id' | 'resumeId'>>({
+    resolver: zodResolver(EducationSchema.omit({id: true, resumeId: true})),
     defaultValues: defaultVal,
   });
+  const { mutateAsync: updateEducation } = useSectionMutation<Omit<Education, 'id' | 'resumeId'>>('education', {
+    onSuccess: (data) => {
+      if (selectedEducation) {
+        onEdit(selectedEducation, {
+          ...data,
+          id: selectedEducation,
+          resumeId: pathName, 
+        });
+      } else {
+        onCreate({ ...(data as Education) });
+      }
+      setIsOpened(false);
+      toast.success("Education updated successfully");
+    },
+    onError: (error) => {
+      console.log(error);
+      toast.error(error.message ?? "Failed to update education");
+    }
+  });
+
 
   useEffect(() => {
     form.reset(defaultVal);
   }, [defaultVal, form]);
 
-  function onSubmit(data: Education) {
-    if (selectedEducation) {
-      onEdit(data.eduId, {
-        ...data,
-      });
-    } else {
-      onCreate({ ...data, eduId: uuidv4(), resumeIdentifier: pathName });
+  async function onSubmit(data: Omit<Education, 'id' | 'resumeId'>) {
+    const payload = {
+      ...data,
+      score: Number(data.score),
     }
-    setIsOpened(false);
+    await updateEducation({
+      resumeId: pathName,
+      data: payload,
+      ...(selectedEducation && { itemId: selectedEducation }),
+    });
   }
 
   return (
@@ -88,7 +109,7 @@ const EducationForm = ({
               >
                 <FormField
                   control={form.control}
-                  name="institutionName"
+                  name="institution"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Institution Name</FormLabel>

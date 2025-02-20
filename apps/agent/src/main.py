@@ -3,20 +3,21 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.core.db.database import db
 from .api import router
 
-@asynccontextmanager
-async def lifespan(_app: FastAPI):
-    await db.connect()
-    yield
-    await db.disconnect()
+# @asynccontextmanager
+# async def lifespan(_app: FastAPI):
+#     await db.connect()
+#     yield
+#     await db.disconnect()
 
-app = FastAPI(lifespan=lifespan)
+# app = FastAPI(lifespan=lifespan)
+app = FastAPI()
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Be specific instead of ["*"] for security
+    allow_origins=["http://localhost:3000", "http://localhost:3001"],  # Be specific instead of ["*"] for security
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # Include OPTIONS
     allow_headers=["*"],  # Allow all headers

@@ -63,11 +63,11 @@ const ExperienceForm = ({
     if (selectedExperience) {
       console.log(data);
 
-      onEdit(data.expId, {
+      onEdit(data.id, {
         ...data,
       });
     } else {
-      onCreate({ ...data, expId: uuidv4() });
+      onCreate({ ...data, id: uuidv4(), resumeId: pathName });
     }
     setIsOpened(false);
   }

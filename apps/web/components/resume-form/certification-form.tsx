@@ -63,14 +63,14 @@ const CertificationForm = ({
     if (selectedCertification) {
       console.log(data);
 
-      onEdit(data.certificationId, {
+      onEdit(data.id, {
         ...data,
       });
     } else {
       onCreate({
         ...data,
-        certificationId: uuidv4(),
-        resumeIdentifier: pathName,
+        id: uuidv4(),
+        resumeId: pathName,
       });
     } 
     setIsOpened(false);

@@ -11,20 +11,20 @@ import { useState } from "react";
 const Language = () => {
   const languages = useResumeStore((state) => state.languages);
   const deleteLanguage = useResumeStore((state) => state.deleteLanguage);
-  const setLanguage = useResumeStore((state) => state.setLanguages);
+  const setLanguage = useResumeStore((state) => state.setLanguage);
   const updateLanguage = useResumeStore((state) => state.updateLanguage);
   const [isLanguageFormOpen, setIsLanguageFormOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   let defaultVal: LanguageType = {
-    languageId: "",
+    id: "",
     languageName: "",
     proficiency: "",
-    resumeIdentifier: "",
+    resumeId: "",
   };
 
   if (selectedLanguage) {
     defaultVal = languages.find(
-      (language) => language.languageId === selectedLanguage
+      (language) => language.id === selectedLanguage
     )!;
   }
 
@@ -36,8 +36,8 @@ const Language = () => {
         <div className="space-y-3">
           {languages.map((language) => (
             <SectionCard
-              key={language.languageId}
-              id={language.languageId}
+              key={language.id}
+              id={language.id}
               onDelete={deleteLanguage}
               primaryHeading={language.languageName}
               secondaryHeading={language.proficiency || ""}

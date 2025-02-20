@@ -1,5 +1,5 @@
 // api/resume.ts
-import axios from 'axios';
+import {api as axios} from '../api/api';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import useResumeStore from '@/hooks/useResumeStore';
 import { Education, Experience, Profile, Skill, Project, Language, Certification } from '../types';
@@ -9,26 +9,25 @@ type ResumeResponse = {
   id: string;
   resumeIdentifier: number;
   profile: Profile;
-  education: Education[];
-  experience: Experience[];
+  educations: Education[];
+  experiences: Experience[];
   skills: Skill[];
   projects: Project[];
   languages: Language[];
   certifications: Certification[];
-  // ... other fields
+  active: boolean;
 };
 
 // Generic type for section items
 type SectionItem = {
-  id: string;
-  resumeId: string;
+
   [key: string]: any;
 };
 
 // Unified API functions
 const api = {
   getResume: async (resumeId: string) => {
-    const response = await axios.get<ResumeResponse>(`/api/resumes/${resumeId}`);
+    const response = await axios.post<ResumeResponse>(`/resume`, {resumeId});
     return response.data;
   },
 
@@ -44,10 +43,10 @@ const api = {
     itemId?: string;
   }) => {
     const endpoint = itemId 
-      ? `/api/resumes/${resumeId}/${sectionName}/${itemId}`
-      : `/api/resumes/${resumeId}/${sectionName}`;
-    
-    const response = await axios[itemId ? 'put' : 'post']<T>(endpoint, data);
+      ? `/resume/${resumeId}/${sectionName}/${itemId}`
+      : `/resume/${resumeId}/${sectionName}`;
+
+    const response = await axios[itemId ? 'patch' : 'post']<T>(endpoint, data);
     return response.data;
   },
 
@@ -60,41 +59,48 @@ const api = {
     sectionName: string;
     itemId: string;
   }) => {
-    await axios.delete(`/api/resumes/${resumeId}/${sectionName}/${itemId}`);
+    await axios.delete(`/resume/${resumeId}`, {data: {section: sectionName, itemId}});
   },
 };
 
-// Custom hooks for resume data management
 export const useResume = (resumeId: string) => {
-  const setStoreData = useResumeStore((state) => ({
-    setProfile: state.setProfile,
-    setExperiences: state.setExperiences,
-    setEducations: state.setEducations,
-    setSkills: state.setSkills,
-    setProjects: state.setProjects,
-    setLanguages: state.setLanguages,
-    setCertifications: state.setCertifications,
-  }));
-
-  return useQuery({
-    queryKey: ['resume', resumeId],
-    queryFn: () => api.getResume(resumeId),
-    // onSuccess: (data) => {
-    //   // Update store with all resume data
-    //   Object.entries(data.profile).forEach(([key, value]) => {
-    //     setStoreData.setProfile(key as string, value as string);
-    //   });
+  return useMutation({
+    mutationKey: ['resume', resumeId],
+    mutationFn: async () => {
+      const data = await api.getResume(resumeId);
+      return data;
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      const store = useResumeStore.getState();
+      store.setResumeId(data.resumeIdentifier.toString());
+      if (data.profile) {
+        Object.entries(data.profile).forEach(([key, value]) => {
+          store.setProfile(key as string, value as string);
+        });
+      }
       
-    //   data.education.forEach(setStoreData.setEducations);
-    //   data.experience.forEach(setStoreData.setExperiences);
-    //   data.skills.forEach(setStoreData.setSkills);
-    //   data.projects.forEach(setStoreData.setProjects);
-    //   data.languages.forEach(setStoreData.setLanguages);
-    //   data.certifications.forEach(setStoreData.setCertifications);
-    // },
+      if (data.educations) {
+        store.setEducations(data.educations);
+      }
+      if (data.experiences) {
+        store.setExperiences(data.experiences);
+      }
+      if (data.skills) {
+        store.setSkills(data.skills);
+      }
+      if (data.projects) {
+        store.setProjects(data.projects);
+      }
+      if (data.languages) {
+        store.setLanguages(data.languages);
+      }
+      if (data.certifications) {
+        store.setCertifications(data.certifications);
+      }
+    },
   });
 };
-
 
 // Generic mutation hook for all section operations
 export const useSectionMutation = <T extends SectionItem>(
@@ -112,6 +118,8 @@ export const useSectionMutation = <T extends SectionItem>(
     }) => api.updateSection<T>({
       ...variables,
       sectionName,
+      itemId: variables.itemId || undefined,
+      resumeId: variables.resumeId,
     }),
     ...options,
   });

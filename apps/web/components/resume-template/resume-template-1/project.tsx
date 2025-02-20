@@ -13,7 +13,7 @@ const Project = () => {
       <h3 className="text-lg font-bold uppercase mb-2">Projects</h3>
       <hr className="border-t border-gray-300 mb-2" />
       {projects.map((project, index) => (
-        <div key={project.projectId} className="mb-3">
+        <div key={project.id} className="mb-3">
           <div className="flex justify-between mb-1">
             <span className="font-bold">{project.projectName}</span>
           </div>

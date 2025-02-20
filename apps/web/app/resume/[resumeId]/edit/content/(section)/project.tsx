@@ -12,21 +12,21 @@ import { useState } from "react";
 const Project = () => {
   const projects = useResumeStore((state) => state.projects);
   const deleteProject = useResumeStore((state) => state.deleteProject);
-  const setProject = useResumeStore((state) => state.setProjects);
+  const setProject = useResumeStore((state) => state.setProject);
   const updateProject = useResumeStore((state) => state.updateProject);
   const [isProjectFormOpen, setIsProjectFormOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   let defaultVal: ProjectType = {
-    projectId: "",
+    id: "",
     projectName: "",
     deploymentLink: "",
     projectDescription: "",
-    resumeIdentifier: "",
+    resumeId: "",
   };
 
   if (selectedProject) {
     defaultVal = projects.find(
-      (project) => project.projectId === selectedProject
+      (project) => project.id === selectedProject
     )!;
   }
 
@@ -38,8 +38,8 @@ const Project = () => {
         <div className="space-y-3">
           {projects.map((project) => (
             <SectionCard
-              key={project.projectId}
-              id={project.projectId}
+              key={project.id}
+              id={project.id}
               onDelete={deleteProject}
               primaryHeading={project.projectName}
               secondaryHeading={formatLink(project.deploymentLink || "")}

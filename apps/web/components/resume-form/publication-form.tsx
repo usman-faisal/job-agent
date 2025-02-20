@@ -64,14 +64,14 @@ const PublicationForm = ({
     if (selectedPublication) {
       console.log(data);
 
-      onEdit(data.publicationId, {
+      onEdit(data.id, {
         ...data,
       });
     } else {
       onCreate({
         ...data,
-        publicationId: uuidv4(),
-        resumeIdentifier: pathName,
+        id: uuidv4(),
+        resumeId: pathName,
       });
     }
     setIsOpened(false);

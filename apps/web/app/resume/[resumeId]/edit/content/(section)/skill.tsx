@@ -11,19 +11,19 @@ import { useState } from "react";
 const Skill = () => {
   const skills = useResumeStore((state) => state.skills);
   const deleteSkill = useResumeStore((state) => state.deleteSkill);
-  const setSkill = useResumeStore((state) => state.setSkills);
+  const setSkill = useResumeStore((state) => state.setSkill);
   const updateSkill = useResumeStore((state) => state.updateSkill);
   const [isSkillFormOpen, setIsSkillFormOpen] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
   let defaultVal: SkillType = {
-    skillId: "",
+    id: "",
     skillCategories: "",
     skillList: "",
-    resumeIdentifier: "",
+    resumeId: "",
   };
 
   if (selectedSkill) {
-    defaultVal = skills.find((skill) => skill.skillId === selectedSkill)!;
+    defaultVal = skills.find((skill) => skill.id === selectedSkill)!;
   }
 
   return (
@@ -34,8 +34,8 @@ const Skill = () => {
         <div className="space-y-3">
           {skills.map((skill) => (
             <SectionCard
-              key={skill.skillId}
-              id={skill.skillId}
+              key={skill.id}
+              id={skill.id}
               onDelete={deleteSkill}
               primaryHeading={skill.skillCategories}
               secondaryHeading={skill.skillList || ""}

@@ -69,11 +69,11 @@ const SkillForm = ({
     if (selectedSkill) {
       console.log(data);
 
-      onEdit(data.skillId, {
+      onEdit(data.id, {
         ...data,
       });
     } else {
-      onCreate({ ...data, skillId: uuidv4(), resumeIdentifier: pathName });
+      onCreate({ ...data, id: uuidv4(), resumeId: pathName });
     }
     setIsOpened(false);
   }

@@ -11,7 +11,7 @@ const Skill = () => {
       <hr className="border-t border-gray-300 mb-2" />
       <div className="grid grid-cols-3 gap-4">
         {skills.map((skill) => (
-          <div key={skill.skillId} className="text-sm">
+          <div key={skill.id} className="text-sm">
             {skill.skillList}
           </div>
         ))}

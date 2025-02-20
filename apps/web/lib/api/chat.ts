@@ -6,7 +6,7 @@ export const useGetMessagesQuery = () => {
     return useQuery({
         queryKey: ["messages"],
         queryFn: async () => {
-            const response = await api.get("/chat/get-messages");
+            const response = await api.get("/chat");
             return response.data;
         },
     });
@@ -15,7 +15,7 @@ export const useGetMessagesQuery = () => {
 export const useSendMessageMutation = () => {
     return useMutation({
         mutationFn: async (message: string) => {
-            const response = await api.post("/chat/send-message?message=" + message);
+            const response = await api.post("/chat", { user_query: message });
             return response.data;
         },
     });

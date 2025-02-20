@@ -7,13 +7,13 @@ import useResumeStore from "@/hooks/useResumeStore";
 import { formatDate } from "@/lib/constants/duration-gap-calculator";
 import { seperateDes } from "@/lib/constants/separate-des";
 const Education = () => {
-  const educations = useResumeStore((state) => state.educations);
-  if (educations.length === 0) return null;
+  const educationList = useResumeStore((state) => state.educations);
+  if (educationList.length === 0) return null;
   return (
     <section className="mb-4">
       <h3 className="text-lg font-bold uppercase mb-2">Education</h3>
       <hr className="border-t border-gray-300 mb-2" />
-      {educations.map((edu, index) => (
+      {educationList.map((edu, index) => (
         <div key={index} className="mb-2">
           <div className="flex justify-between">
             <span className="font-bold">
@@ -23,7 +23,7 @@ const Education = () => {
               {formatDate(edu.startDate!)} - {formatDate(edu.endDate!)}
             </span>
           </div>
-          <p className="text-sm">{edu.institutionName}</p>
+          <p className="text-sm">{edu.institution}</p>
           {edu.description?.length! > 7 ? (
             <ul className="list-disc list-inside mt-2  text-sm">
               {seperateDes(edu.description!).map((item, idx) => (

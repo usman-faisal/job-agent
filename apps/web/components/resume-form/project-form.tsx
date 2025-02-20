@@ -66,11 +66,11 @@ const ProjectForm = ({
   // - Integrated PDF generation using Puppeteer for users to download high-quality, print-ready resumes.
   function onSubmit(data: Project) {
     if (selectedProject) {
-      onEdit(data.projectId, {
+      onEdit(data.id, {
         ...data,
       });
     } else {
-      onCreate({ ...data, projectId: uuidv4(), resumeIdentifier: pathName });
+      onCreate({ ...data, id: uuidv4(), resumeId: pathName });
     }
     setIsOpened(false);
   }

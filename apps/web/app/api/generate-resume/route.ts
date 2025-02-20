@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
               .map(
                 (project: any) =>
                   `<div key=${
-                    project.projectId
+                    project.id
                   } class="mb-3"><div class="flex justify-between"><h3 class="font-semibold text-lg">${
                     project.projectName
                   }</h3></div><p class="italic text-sm">${
@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
               .map(
                 (experience: any) =>
                   `<div key=${
-                    experience.expId
+                    experience.id
                   } class="mb-2"><div class="flex justify-between"><h3 class="font-semibold text-lg">${
                     experience.company
                   }</h3><span class="text-sm">${experience.startDate} - ${
@@ -169,7 +169,7 @@ export async function POST(req: NextRequest) {
           ? `<section class="mb-3"><h2 class="text-xl font-bold border-b border-gray-300 mb-2 uppercase">Skills</h2>${body.skills
               .map(
                 (skill: any) =>
-                  `<div key=${skill.skillId} class="text-sm"><span class="font-semibold">${skill.skillCategories} :</span> ${skill.skillList}</div>`
+                  `<div key=${skill.id} class="text-sm"><span class="font-semibold">${skill.skillCategories} :</span> ${skill.skillList}</div>`
               )
               .join("")}</section>`
           : ""

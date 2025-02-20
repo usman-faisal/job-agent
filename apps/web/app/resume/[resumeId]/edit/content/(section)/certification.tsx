@@ -13,7 +13,7 @@ const Certification = () => {
   const deleteCertification = useResumeStore(
     (state) => state.deleteCertification
   );
-  const setCertification = useResumeStore((state) => state.setCertifications);
+  const setCertification = useResumeStore((state) => state.setCertification);
   const updateCertification = useResumeStore(
     (state) => state.updateCertification
   );
@@ -22,18 +22,18 @@ const Certification = () => {
     string | null
   >(null);
   let defaultVal: CertificationType = {
-    certificationId: "",
+    id: "",
     certificationName: "",
     certificationAuthority: "",
     certificationProof: "",
     description: "",
     date: "",
-    resumeIdentifier: "",
+    resumeId: "",
   };
 
   if (selectedCertification) {
     defaultVal = certifications.find(
-      (certification) => certification.certificationId === selectedCertification
+      (certification) => certification.id === selectedCertification
     )!;
   }
 
@@ -45,8 +45,8 @@ const Certification = () => {
         <div className="space-y-3">
           {certifications.map((certification) => (
             <SectionCard
-              key={certification.certificationId}
-              id={certification.certificationId}
+              key={certification.id}
+              id={certification.id}
               onDelete={deleteCertification}
               primaryHeading={certification.certificationName}
               secondaryHeading={certification.certificationAuthority || ""}

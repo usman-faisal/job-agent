@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { templates } from "./constants/templates";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -31,4 +32,8 @@ export function extractParagraphs(htmlString: string) {
   }
 
   return paragraphs;
+}
+
+export const isValidResume = (resume_id: string) => {
+  return templates.some((template) => template.resumeIdentifier === resume_id);
 }

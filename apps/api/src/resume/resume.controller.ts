@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ResumeService } from './resume.service';
 import { CreateResumeDto } from './dto/create-resume.dto';
-import { UpdateResumeDto } from './dto/update-resume.dto';
 import { Prisma } from '@prisma/client';
 
 @Controller('resume')
@@ -24,12 +23,12 @@ export class ResumeController {
   }
 
   @Post(':id/:section')
-  update(@Param('id') id: string, @Param('section') section: string, @Body() updateResumeDto: UpdateResumeDto) {
+  update(@Param('id') id: string, @Param('section') section: string, @Body() updateResumeDto: any) {
     return this.resumeService.updateSectionItem(updateResumeDto, id, section);
   }
 
   @Patch(':id/:section/:itemId')
-  updateItem(@Param('id') id: string, @Param('section') section: string, @Param('itemId') itemId: string, @Body() updateResumeDto: UpdateResumeDto) {
+  updateItem(@Param('id') id: string, @Param('section') section: string, @Param('itemId') itemId: string, @Body() updateResumeDto: any) {
     return this.resumeService.updateSectionItem(updateResumeDto, id, section, itemId);
   }
 

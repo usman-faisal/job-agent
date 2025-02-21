@@ -59,7 +59,10 @@ export class ResumeService {
   }
 
   async updateSectionItem(data: any, resumeId: string, section: string, itemId?: string) {
-    console.log(this.prismaService)
+    console.log(data, 'data')
+    console.log(resumeId, 'resumeId')
+    console.log(section, 'section')
+    console.log(itemId, 'itemId')
     const resume = await this.prismaService.resume.findUnique({
       where: {
         resumeIdentifier: resumeId
@@ -88,7 +91,6 @@ export class ResumeService {
   async updateEducation(data: any, resumeId: string, itemId?: string) {
     data["resumeId"] = resumeId
     if (itemId) {
-      console.log(itemId, 'sdklfj')
       return await this.prismaService.education.update({
         where: {
           id: itemId,
@@ -302,9 +304,19 @@ export class ResumeService {
     })
   }
 
-  async getResume(query: Prisma.ResumeWhereInput) {
+  async getResume(query: Prisma.ResumeWhereInput, select?: Prisma.ResumeSelect) {
     return await this.prismaService.resume.findFirst({
-      where: query
+      where: query,
+      select: {
+        educations: true,
+        experiences: true,
+        skills: true,
+        projects: true,
+        languages: true,
+        certifications: true,
+        profile: true,
+        ...select
+      }
     })
   }
 

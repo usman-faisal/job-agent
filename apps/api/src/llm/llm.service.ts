@@ -5,6 +5,7 @@ import { GeminiAdapter } from './implementations/gemini.adapter';
 import { LLMInterface } from './llm.interface';
 import { Message } from '@prisma/client';
 import { ResumeService } from 'src/resume/resume.service';
+import { ChatResponse } from 'src/lib/types';
 
 @Injectable()
 export class LlmService implements LLMInterface {
@@ -22,7 +23,7 @@ export class LlmService implements LLMInterface {
         }
     }
 
-    async chat(history: Message[]): Promise<string> {
+    async chat(history: Message[]): Promise<ChatResponse> {
         return this.llm.chat(history)
     }
 }

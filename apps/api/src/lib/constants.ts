@@ -1,3 +1,3 @@
 export const LLM_MODELS = {
-    GEMINI: 'gemini-1.5-flash'
+    GEMINI: 'gemini-2.0-flash'
 }

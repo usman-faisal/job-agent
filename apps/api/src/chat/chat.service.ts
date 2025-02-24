@@ -20,16 +20,20 @@ export class ChatService {
       })
   
       const response = await this.llmService.chat([...messages, newMessage])
-
-    // Fire and forget (don't await)
-    this.prismaService.message.create({
-      data: {
-        content: response,
-        role: Role.assistant
-      }
-    }).catch(error => console.error("Failed to save assistant message:", error))
+      Promise.all(
+        response.map(r => 
+          this.prismaService.message.create({
+            data: {
+              content: r.content,
+              role: r.role
+            }
+          })
+        )
+      ).catch(error => {
+        console.error("Failed to save assistant messages:", error);
+      });
   
-      return response
+      return response.find(message => message.role === Role.assistant)?.content || "No response from assistant"
     } catch(error) {
       if (error instanceof Error) {
         throw new Error("Error in ChatService.create: " + error.message)
@@ -40,7 +44,13 @@ export class ChatService {
 
   async get() {
     try{
-      const messages = await this.prismaService.message.findMany({})
+      const messages = await this.prismaService.message.findMany({
+        where: {
+          role: {
+            not: Role.tool
+          }
+        }
+      })
       return messages
     } catch(error) {
       throw new InternalServerErrorException("Error in ChatService.getChat: " + error)

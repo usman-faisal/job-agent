@@ -1,6 +1,6 @@
 // Prisma.EducationUncheckedCreateInput | Prisma.ExperienceUncheckedCreateInput | Prisma.SkillUncheckedCreateInput | Prisma.ProjectUncheckedCreateInput | Prisma.LanguageUncheckedCreateInput | Prisma.CertificationUncheckedCreateInput | Prisma.ProfileUncheckedCreateInput
 
-import { Prisma } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 
 
 export type SectionCreateInputTypes = {
@@ -12,3 +12,6 @@ export type SectionCreateInputTypes = {
     certification: Prisma.CertificationUncheckedCreateInput,
     profile: Prisma.ProfileUncheckedCreateInput
 }
+
+
+export type ChatResponse = {role: Role, content: string}[]

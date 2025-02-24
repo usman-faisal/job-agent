@@ -59,10 +59,6 @@ export class ResumeService {
   }
 
   async updateSectionItem(data: any, resumeId: string, section: string, itemId?: string) {
-    console.log(data, 'data')
-    console.log(resumeId, 'resumeId')
-    console.log(section, 'section')
-    console.log(itemId, 'itemId')
     const resume = await this.prismaService.resume.findUnique({
       where: {
         resumeIdentifier: resumeId
@@ -91,13 +87,15 @@ export class ResumeService {
   async updateEducation(data: any, resumeId: string, itemId?: string) {
     data["resumeId"] = resumeId
     if (itemId) {
-      return await this.prismaService.education.update({
+      const response = await this.prismaService.education.update({
         where: {
           id: itemId,
           resumeId: resumeId
         },
         data: data
       })
+      console.log(response,'response')
+      return response
     }
     else {
       return await this.prismaService.education.create({

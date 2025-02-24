@@ -1,35 +1,23 @@
 import { DynamicStructuredTool } from "@langchain/core/tools";
 import { z } from "zod";
 import { ResumeService } from "src/resume/resume.service";
-import { CertificationSchema, EducationSchema, ExperienceSchema, LanguageSchema, ProfileSchema, ProjectSchema, SkillSchema } from "src/lib/schema";
-
-
-const sectionSchemas = {
-    profile: ProfileSchema,
-    education: EducationSchema,
-    experience: ExperienceSchema,
-    projects: ProjectSchema,
-    skills: SkillSchema,
-    languages: LanguageSchema,
-    certifications: CertificationSchema
-}
-
-const resumeDataSchema = z.discriminatedUnion("section", [
-    z.object({ section: z.literal("profile"), data: sectionSchemas.profile }),
-    z.object({ section: z.literal("education"), data: sectionSchemas.education }),
-    z.object({ section: z.literal("experience"), data: sectionSchemas.experience }),
-    z.object({ section: z.literal("projects"), data: sectionSchemas.projects }),
-    z.object({ section: z.literal("skills"), data: sectionSchemas.skills }),
-    z.object({ section: z.literal("languages"), data: sectionSchemas.languages }),
-    z.object({ section: z.literal("certifications"), data: sectionSchemas.certifications }),
-  ]);
-  
 
 export const createResumeMutationTool = (resumeService: ResumeService) => {
     return new DynamicStructuredTool({
       name: "mutate_resume_section",
-      description: `Create or update a section in the active resume. **Ensure that the "data" field contains all necessary attributes** for the selected section. Do NOT leave "data" empty or undefined.
-       If the section is being updated, fetch the current values and modify them as needed, rather than leaving fields blank.
+      description: `Create or update a section in the active resume. 
+      
+      You MUST use this tool directly to make changes to the resume.
+      DO NOT return JSON to the user - use this tool to perform the operation.
+      
+      For create operations: Provide all required fields according to the section schema.
+      For update operations: 
+      - Use the sectionId shown in the resume sections above (listed as "ID: <value>" for each entry)
+      - Only provide the fields that need to be modified. Other fields will remain unchanged.
+      - Example: To update an education entry, find its ID in the EDUCATION section above
+
+      Section schemas:
+
       Profile: {
         name: string
         email: string
@@ -86,7 +74,8 @@ export const createResumeMutationTool = (resumeService: ResumeService) => {
         description?: string
       }`,
       schema: z.object({
-        operation: z.enum(["create", "update"]).describe("The operation to perform"),
+        operation: z.enum(["create", "update"])
+          .describe("The operation to perform. For updates, only include fields that need to be modified"),
         section: z.enum([
           "profile",
           "education",
@@ -96,7 +85,7 @@ export const createResumeMutationTool = (resumeService: ResumeService) => {
           "languages",
           "certifications"
         ]),
-        sectionId: z.string().optional().describe("Required for update operations"),
+        sectionId: z.string().optional().describe("The id of the section to update. Only required for update operations"),
         data: z.object({
             // Profile fields
             name: z.string().optional(),
@@ -152,6 +141,14 @@ export const createResumeMutationTool = (resumeService: ResumeService) => {
           if (!resume) {
             throw new Error("No active resume found");
           }
+
+          // format date to ISO-8601
+          if (data?.startDate) {
+            data.startDate = new Date(data.startDate).toISOString();
+          }
+          if (data?.endDate) {
+            data.endDate = new Date(data.endDate).toISOString();
+          }
   
           let result;
           if (operation === "create") {
@@ -162,7 +159,7 @@ export const createResumeMutationTool = (resumeService: ResumeService) => {
             }
             result = await resumeService.updateSectionItem(data, resume.resumeIdentifier, section, sectionId);
           }
-  
+          console.log(result, 'result')
           return JSON.stringify({
             success: true,
             operation,
@@ -175,4 +172,3 @@ export const createResumeMutationTool = (resumeService: ResumeService) => {
       }
     });
   };
-  

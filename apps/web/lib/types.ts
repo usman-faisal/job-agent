@@ -75,5 +75,5 @@ export interface ChatMessage {
     createdAt: string;
     updatedAt: string;
     content: string;
-    role: "user" | "assistant";
+    role: "user" | "assistant" | "tool";
 }
